@@ -9,14 +9,17 @@ pub fn setup_ssbu_sync() {
     sync_config.online_only = false;
     SsbuSync::Get_Init_SsbuSync_Profile("HDR", &sync_config, 1.0);
     ssbusync::Install_SSBU_Sync(sync_config);
+    
+    // TODO: Subscribe to buffer switch for UI updates.
     // if ssbusync::render::buffer_swap::subscribe_buffer_mode_change(on_buffer_switch) {
     //     println!("[HDR] Subscribed to buffer switch \n");
     // } else {
     //     println!("[HDR] Failed to subscribe to buffer switch \n");
     // }
-}
 
-// Work-around for setting input delay during doubles/FFAs
+}
+ 
+// TODO: Work-around for setting input delay during doubles/FFAs for better framerate.
 // pub fn set_doubles_delay(playercount: i32) -> bool {
 //     if (playercount > 2) {
 //         ssbusync::Enable_Triple_Buffer();
