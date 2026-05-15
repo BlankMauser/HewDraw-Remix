@@ -3,13 +3,16 @@ use smash::phx::{Vector2f, Vector3f, Vector4f};
 
 use super::VAR_MODULE_OFFSET;
 
+const VAR_COUNT: usize = 0x200;
+const VAR_INDEX_MASK: i32 = 0xFFF;
+
 macro_rules! get_var_module {
     ($object:ident) => {{
         unsafe {
             let vtable = *($object as *mut *mut *mut u64);
             &mut *super::get_entry::<VarModule>(vtable, VAR_MODULE_OFFSET).expect("Did not find VarModule!")
         }
-    }}
+    }};
 }
 
 macro_rules! has_var_module {
@@ -22,7 +25,7 @@ macro_rules! has_var_module {
                 super::is_hdr_object(vtable as _) && !super::get_entry::<VarModule>(vtable, VAR_MODULE_OFFSET).is_none()
             }
         }
-    }}
+    }};
 }
 
 macro_rules! require_var_module {
@@ -31,7 +34,7 @@ macro_rules! require_var_module {
             panic!("BattleObject does not contain reference to VarModule!");
         }
         get_var_module!($object)
-    }}
+    }};
 }
 
 #[repr(C)]
@@ -39,56 +42,91 @@ pub struct VarModule {
     int: [Vec<i32>; 2],
     int64: [Vec<u64>; 2],
     float: [Vec<f32>; 2],
-    flag: [Vec<bool>; 2]
+    flag: [Vec<bool>; 2],
 }
 
 /// An additional module to be used with Smash's `BattleObject` class. This handles storing and retrieving primitive variables
 /// that you want to associate with a specific object (such as associating a gimmick timer with mario or dk)
 impl VarModule {
     /// Resets all integers that are within the instance array.
-    pub const RESET_INSTANCE_INT:   u8 = 0b00000001;
+    pub const RESET_INSTANCE_INT: u8 = 0b00000001;
     /// Resets all 64-bit values that are within the instance array
     pub const RESET_INSTANCE_INT64: u8 = 0b00000010;
     /// Resets all floats that are within the instance array
     pub const RESET_INSTANCE_FLOAT: u8 = 0b00000100;
     /// Resets all flags that are within the instance array (default is `false`)
-    pub const RESET_INSTANCE_FLAG:  u8 = 0b00001000;
+    pub const RESET_INSTANCE_FLAG: u8 = 0b00001000;
 
     /// Resets all integers that are within the status array
-    pub const RESET_STATUS_INT:   u8 = 0b00010000;
+    pub const RESET_STATUS_INT: u8 = 0b00010000;
     /// Resets all 64-bit values that are within the status array
     pub const RESET_STATUS_INT64: u8 = 0b00100000;
     /// Resets all floats that are within the status array
     pub const RESET_STATUS_FLOAT: u8 = 0b01000000;
     /// Resets all flags that are within the status array
-    pub const RESET_STATUS_FLAG:  u8 = 0b10000000;
+    pub const RESET_STATUS_FLAG: u8 = 0b10000000;
 
     /// Resets all integers
-    pub const RESET_INT:   u8 = Self::RESET_INSTANCE_INT | Self::RESET_STATUS_INT;
+    pub const RESET_INT: u8 = Self::RESET_INSTANCE_INT | Self::RESET_STATUS_INT;
     /// Resets all 64-bit values
     pub const RESET_INT64: u8 = Self::RESET_INSTANCE_INT64 | Self::RESET_STATUS_INT64;
     /// Resets all floats
     pub const RESET_FLOAT: u8 = Self::RESET_INSTANCE_FLOAT | Self::RESET_STATUS_FLOAT;
     /// Resets all flags
-    pub const RESET_FLAG:  u8 = Self::RESET_INSTANCE_FLAG | Self::RESET_STATUS_FLAG;
+    pub const RESET_FLAG: u8 = Self::RESET_INSTANCE_FLAG | Self::RESET_STATUS_FLAG;
 
     /// Resets all values in the instance array
     pub const RESET_INSTANCE: u8 = 0xF;
     /// Resets all values in the status array
-    pub const RESET_STATUS:   u8 = 0xF0;
+    pub const RESET_STATUS: u8 = 0xF0;
     /// Resets all values
-    pub const RESET_ALL:      u8 = 0xFF;
+    pub const RESET_ALL: u8 = 0xFF;
 
     /// Constructs a new instance of `VarModule` that defaults all values to either `0` or `false`
     /// # Returns
     /// A blank `VarModule` instance
     pub(crate) fn new() -> Self {
         Self {
-            int: [vec![0; 0x200], vec![0; 0x200]],
-            int64: [vec![0; 0x200], vec![0; 0x200]],
-            float: [vec![0.0; 0x200], vec![0.0; 0x200]],
-            flag: [vec![false; 0x200], vec![false; 0x200]]
+            int: [Vec::new(), Vec::new()],
+            int64: [Vec::new(), Vec::new()],
+            float: [Vec::new(), Vec::new()],
+            flag: [Vec::new(), Vec::new()],
         }
+    }
+
+    fn decode_var(what: i32) -> (usize, usize) {
+        let vec_index = ((what >> 0xC) & 0x1) as usize;
+        let index = (what & VAR_INDEX_MASK) as usize;
+        assert!(index < VAR_COUNT, "VarModule index out of range: {:#x}", index);
+        (vec_index, index)
+    }
+
+    fn get_value<T: Copy + Default>(values: &[Vec<T>; 2], what: i32) -> T {
+        let (vec_index, index) = Self::decode_var(what);
+        values[vec_index].get(index).copied().unwrap_or_default()
+    }
+
+    fn set_value<T: Clone + Default + PartialEq>(values: &mut [Vec<T>; 2], what: i32, val: T) {
+        let (vec_index, index) = Self::decode_var(what);
+        if values[vec_index].len() <= index {
+            if val == T::default() {
+                return;
+            }
+            values[vec_index].resize(index + 1, T::default());
+        }
+        values[vec_index][index] = val;
+    }
+
+    fn value_mut<T: Clone + Default>(values: &mut [Vec<T>; 2], what: i32) -> &mut T {
+        let (vec_index, index) = Self::decode_var(what);
+        if values[vec_index].len() <= index {
+            values[vec_index].resize(index + 1, T::default());
+        }
+        &mut values[vec_index][index]
+    }
+
+    fn get_float_at(&self, vec_index: usize, index: usize) -> f32 {
+        self.float[vec_index].get(index).copied().unwrap_or_default()
     }
 
     /// Checks if the object has `VarModule`
@@ -141,9 +179,7 @@ impl VarModule {
     #[export_name = "VarModule__get_int"]
     pub extern "Rust" fn get_int(object: *mut BattleObject, what: i32) -> i32 {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int[vec_index][index]
+        Self::get_value(&module.int, what)
     }
 
     /// Retrieves a float
@@ -155,9 +191,7 @@ impl VarModule {
     #[export_name = "VarModule__get_float"]
     pub extern "Rust" fn get_float(object: *mut BattleObject, what: i32) -> f32 {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.float[vec_index][index]
+        Self::get_value(&module.float, what)
     }
 
     /// Retrieves a 64-bit value
@@ -169,9 +203,7 @@ impl VarModule {
     #[export_name = "VarModule__get_int64"]
     pub extern "Rust" fn get_int64(object: *mut BattleObject, what: i32) -> u64 {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int64[vec_index][index]
+        Self::get_value(&module.int64, what)
     }
 
     /// Retrieves a flag
@@ -183,9 +215,7 @@ impl VarModule {
     #[export_name = "VarModule__is_flag"]
     pub extern "Rust" fn is_flag(object: *mut BattleObject, what: i32) -> bool {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.flag[vec_index][index]
+        Self::get_value(&module.flag, what)
     }
 
     /// Sets an integer value
@@ -196,9 +226,7 @@ impl VarModule {
     #[export_name = "VarModule__set_int"]
     pub extern "Rust" fn set_int(object: *mut BattleObject, what: i32, val: i32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int[vec_index][index] = val;
+        Self::set_value(&mut module.int, what, val);
     }
 
     /// Sets a float value
@@ -209,9 +237,7 @@ impl VarModule {
     #[export_name = "VarModule__set_float"]
     pub extern "Rust" fn set_float(object: *mut BattleObject, what: i32, val: f32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.float[vec_index][index] = val;
+        Self::set_value(&mut module.float, what, val);
     }
 
     /// Sets a 64-bit value
@@ -222,9 +248,7 @@ impl VarModule {
     #[export_name = "VarModule__set_int64"]
     pub extern "Rust" fn set_int64(object: *mut BattleObject, what: i32, val: u64) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int64[vec_index][index] = val;
+        Self::set_value(&mut module.int64, what, val);
     }
 
     /// Sets a flag
@@ -235,9 +259,7 @@ impl VarModule {
     #[export_name = "VarModule__set_flag"]
     pub extern "Rust" fn set_flag(object: *mut BattleObject, what: i32, val: bool) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.flag[vec_index][index] = val;
+        Self::set_value(&mut module.flag, what, val);
     }
 
     /// Sets a flag to false
@@ -288,9 +310,7 @@ impl VarModule {
     #[export_name = "VarModule__add_int"]
     pub extern "Rust" fn add_int(object: *mut BattleObject, what: i32, amount: i32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int[vec_index][index] += amount;
+        *Self::value_mut(&mut module.int, what) += amount;
     }
 
     /// Subtracts a value from an integer
@@ -301,9 +321,7 @@ impl VarModule {
     #[export_name = "VarModule__sub_int"]
     pub extern "Rust" fn sub_int(object: *mut BattleObject, what: i32, amount: i32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.int[vec_index][index] -= amount;
+        *Self::value_mut(&mut module.int, what) -= amount;
     }
 
     /// Increments an integer
@@ -336,9 +354,7 @@ impl VarModule {
     #[export_name = "VarModule__add_float"]
     pub extern "Rust" fn add_float(object: *mut BattleObject, what: i32, amount: f32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.float[vec_index][index] += amount;
+        *Self::value_mut(&mut module.float, what) += amount;
     }
 
     /// Subtracts a value from a float
@@ -349,9 +365,7 @@ impl VarModule {
     #[export_name = "VarModule__sub_float"]
     pub extern "Rust" fn sub_float(object: *mut BattleObject, what: i32, amount: f32) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        module.float[vec_index][index] -= amount;
+        *Self::value_mut(&mut module.float, what) -= amount;
     }
 
     /// Sets a 2-dimensional vector
@@ -364,10 +378,12 @@ impl VarModule {
     #[export_name = "VarModule__set_vec2"]
     pub extern "Rust" fn set_vec2(object: *mut BattleObject, what: i32, val: Vector2f) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFF {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 2 > VAR_COUNT {
             panic!("Cannot set Vec2 on index that will overflow!");
+        }
+        if module.float[vec_index].len() < index + 2 {
+            module.float[vec_index].resize(index + 2, 0.0);
         }
         module.float[vec_index][index + 0] = val.x;
         module.float[vec_index][index + 1] = val.y;
@@ -383,10 +399,12 @@ impl VarModule {
     #[export_name = "VarModule__set_vec3"]
     pub extern "Rust" fn set_vec3(object: *mut BattleObject, what: i32, val: Vector3f) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFE {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 3 > VAR_COUNT {
             panic!("Cannot set Vec2 on index that will overflow!");
+        }
+        if module.float[vec_index].len() < index + 3 {
+            module.float[vec_index].resize(index + 3, 0.0);
         }
         module.float[vec_index][index + 0] = val.x;
         module.float[vec_index][index + 1] = val.y;
@@ -403,10 +421,12 @@ impl VarModule {
     #[export_name = "VarModule__set_vec4"]
     pub extern "Rust" fn set_vec4(object: *mut BattleObject, what: i32, val: Vector4f) {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFD {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 4 > VAR_COUNT {
             panic!("Cannot set Vec2 on index that will overflow!");
+        }
+        if module.float[vec_index].len() < index + 4 {
+            module.float[vec_index].resize(index + 4, 0.0);
         }
         module.float[vec_index][index + 0] = val.x;
         module.float[vec_index][index + 1] = val.y;
@@ -425,14 +445,13 @@ impl VarModule {
     #[export_name = "VarModule__get_vec2"]
     pub extern "Rust" fn get_vec2(object: *mut BattleObject, what: i32) -> Vector2f {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFF {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 2 > VAR_COUNT {
             panic!("Cannot get Vec2 with index that will overflow!");
         }
         Vector2f {
-            x: module.float[vec_index][index + 0],
-            y: module.float[vec_index][index + 1]
+            x: module.get_float_at(vec_index, index + 0),
+            y: module.get_float_at(vec_index, index + 1),
         }
     }
 
@@ -447,15 +466,14 @@ impl VarModule {
     #[export_name = "VarModule__get_vec3"]
     pub extern "Rust" fn get_vec3(object: *mut BattleObject, what: i32) -> Vector3f {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFE {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 3 > VAR_COUNT {
             panic!("Cannot get Vec2 with index that will overflow!");
         }
         Vector3f {
-            x: module.float[vec_index][index + 0],
-            y: module.float[vec_index][index + 1],
-            z: module.float[vec_index][index + 2]
+            x: module.get_float_at(vec_index, index + 0),
+            y: module.get_float_at(vec_index, index + 1),
+            z: module.get_float_at(vec_index, index + 2),
         }
     }
 
@@ -470,16 +488,15 @@ impl VarModule {
     #[export_name = "VarModule__get_vec4"]
     pub extern "Rust" fn get_vec4(object: *mut BattleObject, what: i32) -> Vector4f {
         let module = require_var_module!(object);
-        let vec_index = ((what >> 0xC) & 0x1) as usize;
-        let index = (what & 0xFFF) as usize;
-        if index >= 0xFFD {
+        let (vec_index, index) = Self::decode_var(what);
+        if index + 4 > VAR_COUNT {
             panic!("Cannot get Vec2 with index that will overflow!");
         }
         Vector4f {
-            x: module.float[vec_index][index + 0],
-            y: module.float[vec_index][index + 1],
-            z: module.float[vec_index][index + 2],
-            w: module.float[vec_index][index + 3]
+            x: module.get_float_at(vec_index, index + 0),
+            y: module.get_float_at(vec_index, index + 1),
+            z: module.get_float_at(vec_index, index + 2),
+            w: module.get_float_at(vec_index, index + 3),
         }
     }
 }

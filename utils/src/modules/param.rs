@@ -270,6 +270,9 @@ impl FighterParam {
 }
 
 static AGENT_PARAMS: &'static str = hdr_macros::agent_params!("romfs/agent_params.txt");
+const FIGHTER_PARAM_CALLBACK_MAX: usize = 128 * 1024;
+const COMMON_PARAM_CALLBACK_MAX: usize = 32 * 1024;
+const AGENT_PARAM_CALLBACK_MAX: usize = 64 * 1024;
 
 lazy_static! {
     static ref GLOBAL_FIGHTER_PARAM: RwLock<Option<FighterParam>> = RwLock::new(None);
@@ -1188,11 +1191,11 @@ impl ParamModule {
 pub(crate) fn init() {
     fighter_param_callback::install(
         "fighter/common/hdr/param/fighter_param.xml",
-        1 * 1024 * 1024,
+        FIGHTER_PARAM_CALLBACK_MAX,
     );
-    common_param_callback::install("fighter/common/hdr/param/common.xml", 1 * 1024 * 1024);
+    common_param_callback::install("fighter/common/hdr/param/common.xml", COMMON_PARAM_CALLBACK_MAX);
     for (file, _) in AGENT_PARAM_REVERSE.iter() {
-        agent_param_callback::install(arcropolis_api::Hash40(file.hash), 1 * 1024 * 1024);
+        agent_param_callback::install(arcropolis_api::Hash40(file.hash), AGENT_PARAM_CALLBACK_MAX);
     }
 
     // if TourneyConfig isn't valid, then don't bother installing callbacks
