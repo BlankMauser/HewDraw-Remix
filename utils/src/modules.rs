@@ -143,10 +143,16 @@ pub fn clean_hdr_object(address: *mut *mut u64) {
 
     if is_hdr_object(address as _) {
         unsafe {
-            std::alloc::dealloc(address.offset(TOTAL_SIZE_OFFSET) as _, std::alloc::Layout::from_size_align(
-                *address.offset(TOTAL_SIZE_OFFSET) as usize,
-                std::mem::size_of::<*mut u64>()
-            ).unwrap());
+            let total_entries = *address.offset(TOTAL_SIZE_OFFSET) as usize;
+            let allocation_base = address.offset(-(ADDITIONAL_VTABLE_ENTRIES as isize));
+            std::alloc::dealloc(
+                allocation_base as _,
+                std::alloc::Layout::from_size_align(
+                    total_entries * std::mem::size_of::<*mut u64>(),
+                    std::mem::size_of::<*mut u64>(),
+                )
+                .unwrap(),
+            );
         }
     }
 }
