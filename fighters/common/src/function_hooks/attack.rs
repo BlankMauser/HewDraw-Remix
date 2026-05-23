@@ -1,7 +1,228 @@
 use super::*;
+use skyline::hooks::InlineCtx;
 use smash_rs::app::CollisionSoundAttr;
 use utils::ext::*;
 use utils::game_modes::CustomMode;
+
+use super::vtables::master::MasterOnHit;
+
+macro_rules! fighter_kind_key {
+    (FIGHTER_KIND_ALL) => { 0x5E };
+    (FIGHTER_KIND_BASE_APPEND_HEAD) => { 0x51 };
+    (FIGHTER_KIND_BASE_APPEND_NUM) => { 0xD };
+    (FIGHTER_KIND_BASE_APPEND_TAIL) => { 0x5D };
+    (FIGHTER_KIND_BASE_HEAD) => { 0x0 };
+    (FIGHTER_KIND_BASE_NUM) => { 0x4D };
+    (FIGHTER_KIND_BASE_TAIL) => { 0x4C };
+    (FIGHTER_KIND_BAYONETTA) => { 0x40 };
+    (FIGHTER_KIND_BRAVE) => { 0x53 };
+    (FIGHTER_KIND_BUDDY) => { 0x54 };
+    (FIGHTER_KIND_CAPTAIN) => { 0xB };
+    (FIGHTER_KIND_CHROM) => { 0x1B };
+    (FIGHTER_KIND_CLOUD) => { 0x3E };
+    (FIGHTER_KIND_DAISY) => { 0xE };
+    (FIGHTER_KIND_DEDEDE) => { 0x2A };
+    (FIGHTER_KIND_DEMON) => { 0x5C };
+    (FIGHTER_KIND_DIDDY) => { 0x27 };
+    (FIGHTER_KIND_DOLLY) => { 0x55 };
+    (FIGHTER_KIND_DONKEY) => { 0x1 };
+    (FIGHTER_KIND_DUCKHUNT) => { 0x3B };
+    (FIGHTER_KIND_EDGE) => { 0x59 };
+    (FIGHTER_KIND_EFLAME) => { 0x5A };
+    (FIGHTER_KIND_ELEMENT) => { 0x75 };
+    (FIGHTER_KIND_ELIGHT) => { 0x5B };
+    (FIGHTER_KIND_FALCO) => { 0x14 };
+    (FIGHTER_KIND_FLAME) => { 0x73 };
+    (FIGHTER_KIND_FOX) => { 0x7 };
+    (FIGHTER_KIND_FUSHIGISOU) => { 0x70 };
+    (FIGHTER_KIND_GAMEWATCH) => { 0x1C };
+    (FIGHTER_KIND_GANON) => { 0x18 };
+    (FIGHTER_KIND_GAOGAEN) => { 0x47 };
+    (FIGHTER_KIND_GEKKOUGA) => { 0x35 };
+    (FIGHTER_KIND_ICE_CLIMBER) => { 0x6E };
+    (FIGHTER_KIND_IKE) => { 0x23 };
+    (FIGHTER_KIND_INKLING) => { 0x41 };
+    (FIGHTER_KIND_JACK) => { 0x52 };
+    (FIGHTER_KIND_KAMUI) => { 0x3F };
+    (FIGHTER_KIND_KEN) => { 0x3D };
+    (FIGHTER_KIND_KIRBY) => { 0x6 };
+    (FIGHTER_KIND_KOOPA) => { 0xF };
+    (FIGHTER_KIND_KOOPAG) => { 0x4D };
+    (FIGHTER_KIND_KOOPAJR) => { 0x3A };
+    (FIGHTER_KIND_KROOL) => { 0x45 };
+    (FIGHTER_KIND_LIGHT) => { 0x74 };
+    (FIGHTER_KIND_LINK) => { 0x2 };
+    (FIGHTER_KIND_LITTLEMAC) => { 0x34 };
+    (FIGHTER_KIND_LIZARDON) => { 0x71 };
+    (FIGHTER_KIND_LUCARIO) => { 0x2C };
+    (FIGHTER_KIND_LUCAS) => { 0x28 };
+    (FIGHTER_KIND_LUCINA) => { 0x16 };
+    (FIGHTER_KIND_LUIGI) => { 0x9 };
+    (FIGHTER_KIND_MARIO) => { 0x0 };
+    (FIGHTER_KIND_MARIOD) => { 0x12 };
+    (FIGHTER_KIND_MARTH) => { 0x15 };
+    (FIGHTER_KIND_MASTER) => { 0x56 };
+    (FIGHTER_KIND_METAKNIGHT) => { 0x1D };
+    (FIGHTER_KIND_MEWTWO) => { 0x19 };
+    (FIGHTER_KIND_MIIENEMYF) => { 0x4E };
+    (FIGHTER_KIND_MIIENEMYG) => { 0x50 };
+    (FIGHTER_KIND_MIIENEMYS) => { 0x4F };
+    (FIGHTER_KIND_MIIFIGHTER) => { 0x48 };
+    (FIGHTER_KIND_MIIGUNNER) => { 0x4A };
+    (FIGHTER_KIND_MIISWORDSMAN) => { 0x49 };
+    (FIGHTER_KIND_MURABITO) => { 0x30 };
+    (FIGHTER_KIND_NANA) => { 0x4C };
+    (FIGHTER_KIND_NESS) => { 0xA };
+    (FIGHTER_KIND_NONE) => { -1 };
+    (FIGHTER_KIND_OTHER_HEAD) => { 0x4D };
+    (FIGHTER_KIND_OTHER_NUM) => { 0x4 };
+    (FIGHTER_KIND_OTHER_TAIL) => { 0x50 };
+    (FIGHTER_KIND_PACKUN) => { 0x51 };
+    (FIGHTER_KIND_PACMAN) => { 0x37 };
+    (FIGHTER_KIND_PALUTENA) => { 0x36 };
+    (FIGHTER_KIND_PEACH) => { 0xD };
+    (FIGHTER_KIND_PFUSHIGISOU) => { 0x25 };
+    (FIGHTER_KIND_PICHU) => { 0x13 };
+    (FIGHTER_KIND_PICKEL) => { 0x58 };
+    (FIGHTER_KIND_PIKACHU) => { 0x8 };
+    (FIGHTER_KIND_PIKMIN) => { 0x2B };
+    (FIGHTER_KIND_PIT) => { 0x1E };
+    (FIGHTER_KIND_PITB) => { 0x1F };
+    (FIGHTER_KIND_PLIZARDON) => { 0x26 };
+    (FIGHTER_KIND_POPO) => { 0x4B };
+    (FIGHTER_KIND_PTRAINER) => { 0x72 };
+    (FIGHTER_KIND_PURIN) => { 0xC };
+    (FIGHTER_KIND_PZENIGAME) => { 0x24 };
+    (FIGHTER_KIND_RANDOM) => { 0x77 };
+    (FIGHTER_KIND_REFLET) => { 0x38 };
+    (FIGHTER_KIND_RICHTER) => { 0x44 };
+    (FIGHTER_KIND_RIDLEY) => { 0x42 };
+    (FIGHTER_KIND_ROBOT) => { 0x2D };
+    (FIGHTER_KIND_ROCKMAN) => { 0x31 };
+    (FIGHTER_KIND_ROSETTA) => { 0x33 };
+    (FIGHTER_KIND_ROY) => { 0x1A };
+    (FIGHTER_KIND_RYU) => { 0x3C };
+    (FIGHTER_KIND_SAMUS) => { 0x3 };
+    (FIGHTER_KIND_SAMUSD) => { 0x4 };
+    (FIGHTER_KIND_SHEIK) => { 0x10 };
+    (FIGHTER_KIND_SHIZUE) => { 0x46 };
+    (FIGHTER_KIND_SHULK) => { 0x39 };
+    (FIGHTER_KIND_SIMON) => { 0x43 };
+    (FIGHTER_KIND_SNAKE) => { 0x22 };
+    (FIGHTER_KIND_SONIC) => { 0x29 };
+    (FIGHTER_KIND_SZEROSUIT) => { 0x20 };
+    (FIGHTER_KIND_TABLE_EX_START) => { 0x6D };
+    (FIGHTER_KIND_TABLE_EX_TERM) => { 0x76 };
+    (FIGHTER_KIND_TANTAN) => { 0x57 };
+    (FIGHTER_KIND_TERM) => { 0x5E };
+    (FIGHTER_KIND_TOONLINK) => { 0x2E };
+    (FIGHTER_KIND_TRAIL) => { 0x5D };
+    (FIGHTER_KIND_WARIO) => { 0x21 };
+    (FIGHTER_KIND_WIIFIT) => { 0x32 };
+    (FIGHTER_KIND_WOLF) => { 0x2F };
+    (FIGHTER_KIND_YOSHI) => { 0x5 };
+    (FIGHTER_KIND_YOUNGLINK) => { 0x17 };
+    (FIGHTER_KIND_ZELDA) => { 0x11 };
+    (FIGHTER_KIND_ZENIGAME) => { 0x6F };
+}
+
+#[derive(Clone, Copy, Debug, Default)]
+pub(crate) struct OnHitEvent;
+
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, Default)]
+pub(crate) struct OnHurtEvent;
+
+pub(crate) struct OnHitContext<'a> {
+    inline_ctx: &'a InlineCtx,
+    collision_log: *mut u8,
+    attacker_object: *mut BattleObject,
+}
+
+impl<'a> OnHitContext<'a> {
+    #[inline(always)]
+    pub(crate) fn new(
+        inline_ctx: &'a InlineCtx,
+        collision_log: *mut u8,
+        attacker_object: *mut BattleObject,
+    ) -> Self {
+        Self {
+            inline_ctx,
+            collision_log,
+            attacker_object,
+        }
+    }
+
+    #[inline(always)]
+    pub(crate) fn collision_log(&self) -> *mut u8 {
+        self.collision_log
+    }
+
+    #[inline(always)]
+    pub(crate) unsafe fn hitbox_id(&self) -> u8 {
+        *self.hitbox_id_ptr()
+    }
+
+    #[inline(always)]
+    pub(crate) unsafe fn set_hitbox_id(&self, hitbox_id: u8) {
+        *self.hitbox_id_ptr() = hitbox_id;
+    }
+
+    #[inline(always)]
+    pub(crate) unsafe fn attacker_boma(&self) -> &mut BattleObjectModuleAccessor {
+        &mut *(*self.attacker_object).module_accessor
+    }
+
+    #[inline(always)]
+    pub(crate) unsafe fn receiver_boma(&self) -> &mut BattleObjectModuleAccessor {
+        let module = self.inline_ctx.registers[19].x();
+        &mut *(*(module as *mut *mut BattleObjectModuleAccessor).add(1))
+    }
+
+    #[inline(always)]
+    unsafe fn hitbox_id_ptr(&self) -> *mut u8 {
+        self.collision_log().add(0x32)
+    }
+}
+
+#[allow(dead_code)]
+pub(crate) struct OnHurtContext<'a> {
+    inline_ctx: &'a InlineCtx,
+    receiver_boma: *mut BattleObjectModuleAccessor,
+}
+
+#[allow(dead_code)]
+impl<'a> OnHurtContext<'a> {
+    #[inline(always)]
+    pub(crate) fn new(
+        inline_ctx: &'a InlineCtx,
+        receiver_boma: *mut BattleObjectModuleAccessor,
+    ) -> Self {
+        Self {
+            inline_ctx,
+            receiver_boma,
+        }
+    }
+
+    #[inline(always)]
+    pub(crate) unsafe fn receiver_boma(&self) -> &mut BattleObjectModuleAccessor {
+        &mut *self.receiver_boma
+    }
+
+    #[inline(always)]
+    pub(crate) fn inline_ctx(&self) -> &InlineCtx {
+        self.inline_ctx
+    }
+}
+
+pub(crate) trait OnHit {
+    fn on_hit(ctx: &mut OnHitContext<'_>);
+}
+
+#[allow(dead_code)]
+pub(crate) trait OnHurt {
+    fn on_hurt(ctx: &mut OnHurtContext<'_>);
+}
 
 #[skyline::hook(offset = 0x3dc180)]
 unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut smash_rs::app::AttackData) {
@@ -135,6 +356,45 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
 
         call_original!(module, 1, group, data);
     }
+}
+
+#[skyline::hook(offset = 0x46ae08, inline)]
+unsafe fn on_hitbox_collide(ctx: &InlineCtx) {
+    let collision_log = ctx.registers[27].x() as *mut u8;
+
+    let attacker_id = *(collision_log.add(0x24) as *const u32);
+    let attacker_object = utils::util::get_battle_object_from_id(attacker_id);
+
+    let attacker_object = &mut *attacker_object;
+    if !attacker_object.is_fighter() && !attacker_object.is_weapon() {
+        return;
+    }
+    
+    rollcall::event_dispatch! {
+        OnHitEvent;
+        key attacker_object.kind();
+        context(on_hit_ctx = OnHitContext::new(ctx, collision_log, attacker_object as *mut BattleObject));
+        handler_trait = OnHit;
+        handler_method = on_hit;
+
+        fighter_kind_key!(FIGHTER_KIND_MASTER) => MasterOnHit,
+    }
+
+    let defender_object = &mut *attacker_object;
+    if !defender_object.is_fighter() && !defender_object.is_weapon() {
+        return;
+    }
+
+    // rollcall::event_dispatch! {
+    //     OnHurtEvent;
+    //     key attacker_object.kind();
+    //     context(on_hit_ctx = OnHitContext::new(ctx, collision_log, attacker_object as *mut BattleObject));
+    //     handler_trait = OnHurt;
+    //     handler_method = on_hurt;
+
+    //     fighter_kind_key!(FIGHTER_KIND_MASTER) => MasterOnHit,
+    // }
+    
 }
 
 #[skyline::hook(offset = 0x403c3c, inline)]
@@ -554,6 +814,7 @@ pub fn install() {
     skyline::patching::Patch::in_text(0x641d84).nop();
     skyline::install_hooks!(
         attack_module_set_attack,
+        on_hitbox_collide,
         get_damage_frame_mul,
         get_hitstop_frame_add,
         get_hitstop_mul,
@@ -572,4 +833,3 @@ pub fn install() {
         damage_module__unk__set_damage
     );
 }
-

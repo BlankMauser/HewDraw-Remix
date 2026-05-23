@@ -18,3 +18,4 @@ rand = { git = "https://github.com/skyline-rs/rand" }
 proc-hitbox = { git = "https://github.com/HDR-Development/compile-time-smash-script" }
 proc-hitbox-macro = { git = "https://github.com/HDR-Development/compile-time-smash-script" }
 chrono = "0.4"
+rollcall = { path = "E:/ProjectFenrir/crates/rollcall", default-features = false }

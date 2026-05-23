@@ -13,7 +13,7 @@ mod ike;
 mod krool;
 mod littlemac;
 mod lucario;
-mod master;
+pub(crate) mod master;
 mod pickel;
 mod ptrainer;
 mod reflet;
@@ -26,6 +26,7 @@ mod ryu_shinkuhadoken;
 mod dolly_burst;
 
 mod weapon;
+mod scan;
 
 pub fn install() {
     bayonetta::install();
@@ -54,4 +55,5 @@ pub fn install() {
     dolly_burst::install();
 
     weapon::install();
+    scan::install();
 }

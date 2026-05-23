@@ -1,4 +1,5 @@
 use super::*;
+use core::f32;
 
 unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -682,8 +683,28 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::master::status::SPECIAL_LW_ENABLE_CANCEL)
+        VarModule::off_flag(agent.battle_object, vars::master::status::SPECIAL_LW_ENABLE_CANCEL);
+        VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_GROUND_HITBOX);
+        //  First hitbox is a searchbox. Next two hitboxes have a size of 0. 
+        //  Dynamically chosen in fighters\common\src\function_hooks\vtables\master.rs
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 270, 0, 0, 5, 8, 0.0, 0.0, 150.0, Some(0.0), Some(0.0), Some(-150.0), 1.2, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 361, 0, 0, 1, 0, 0.0, 0.0, 150.0, Some(0.0), Some(0.0), Some(-150.0), 1.2, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_LR, false, f32::NAN, 100.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 270, 0, 0, 55, 0, 0.0, 0.0, 150.0, Some(0.0), Some(0.0), Some(-150.0), 1.5, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
+    }
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_GROUND_HITBOX);
+    }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_GROUND_HITBOX);
+    }
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_GROUND_HITBOX);
+        AttackModule::clear_all(boma);
     }
     frame(lua_state, 54.0);
     if is_excute(agent) {

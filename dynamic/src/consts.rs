@@ -1199,6 +1199,7 @@ pub mod vars {
             pub const SPECIAL_LW_FALL: i32 = 0x1102;
             pub const SPECIAL_LW_FALLING: i32 = 0x1103;
             pub const SPECIAL_LW_ENABLE_CANCEL: i32 = 0x1104;
+            pub const SPECIAL_LW_GROUND_HITBOX: i32 = 0x1105;
 
             // ints
             pub const SPECIAL_LW_FALL_COUNT: i32 = 0x1100;
