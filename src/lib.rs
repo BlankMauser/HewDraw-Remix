@@ -39,7 +39,7 @@ mod online;
 #[cfg(feature = "main_nro")]
 mod matchup;
 
-pub mod vsync;
+//pub mod vsync;
 
 use skyline::libc::c_char;
 use std::os::raw::c_void;

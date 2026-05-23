@@ -8,8 +8,6 @@ version = "0.0.0-dev"
 authors = ["HDR Development Team"]
 edition = "2021"
 
-[workspace.metadata.symbaker]
-prefix = "hdr"
 
 [workspace.dependencies]
 skyline = { git = "https://github.com/ultimate-research/skyline-rs" }
@@ -243,6 +241,7 @@ ultelier = { path = "E:/HewDropRemix/SmashUltelier", default-features = false, f
 rlua-lua53-sys = { git = "https://github.com/HDR-Development/rlua", branch = "smash" }
 
 [patch.crates-io]
+skyline = { git = "https://github.com/ultimate-research/skyline-rs" }
 nnsdk = { git = "https://github.com/ultimate-research/nnsdk-rs" }
 libc = { git="https://github.com/rust-lang/libc", rev = "0.2.166"}
 
