@@ -1,0 +1,20 @@
+fighters/common/src/function_hooks/collision.rs
+  h_03360edcd9e88f 82
+fighters/common/src/function_hooks/lua_bind_hook/work.rs
+  h_03360edcd9e88f 3,5-26,35-52,65,70-71,75-77
+fighters/common/src/function_hooks/transition.rs
+  h_03360edcd9e88f 81
+utils/src/modules/input.rs
+  h_03360edcd9e88f 478-479
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "714f3c9e6636deed2e6144e22c69b8f45b7b2158",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
