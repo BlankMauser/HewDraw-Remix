@@ -1,0 +1,16 @@
+fighters/common/src/function_hooks/collision.rs
+  h_03360edcd9e88f 89
+fighters/common/src/function_hooks/get_param.rs
+  h_03360edcd9e88f 8-13,64-67,85,91,96,101,105,111,116-117,125,127,149,153,157,161,165,169,173,177,181,185,189,193,197,204,209,216-220,235,243-244,256-257,267,279-280,282,290-291,303-304,307,315,317,326,337,347-351,356,362,368-369,383-384,387,390,396-397,400,403,406,414,416,419
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f48ebdcc9712cbc6366f38bc51c3a62d1ca048d0",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
