@@ -1,0 +1,28 @@
+fighters/packun/src/lib.rs
+  h_03360edcd9e88f 102
+fighters/purin/src/lib.rs
+  h_03360edcd9e88f 56
+fighters/palutena/src/lib.rs
+  h_03360edcd9e88f 63
+fighters/plizardon/src/lib.rs
+  h_03360edcd9e88f 84-85
+fighters/ken/src/lib.rs
+  h_03360edcd9e88f 50
+fighters/kirby/src/lib.rs
+  h_03360edcd9e88f 60,62-64
+fighters/pfushigisou/src/lib.rs
+  h_03360edcd9e88f 70
+fighters/ryu/src/lib.rs
+  h_03360edcd9e88f 50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "44338a75dc7437d19960d94fa151ecdacc694d9b",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
