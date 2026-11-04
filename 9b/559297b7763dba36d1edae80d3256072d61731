@@ -1,0 +1,22 @@
+dynamic/src/game_modes.rs
+  h_03360edcd9e88f 21-27,77-79,97-102,104,108-109
+fighters/common/src/function_hooks/get_param.rs
+  h_03360edcd9e88f 6,38-68,73,76-87,89-92,103-106,136,139,141-195,197-200,202-206,208-222,224-226,241-249,339-345,347,357,364,389
+fighters/common/src/misc.rs
+  h_03360edcd9e88f 82-83
+utils/src/game_modes.rs
+  h_03360edcd9e88f 5,22-24,27-38,56,90,92,99,126,135,139,156,159-161,164-173
+utils/src/modules/input.rs
+  h_03360edcd9e88f 669-670
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9b559297b7763dba36d1edae80d3256072d61731",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
