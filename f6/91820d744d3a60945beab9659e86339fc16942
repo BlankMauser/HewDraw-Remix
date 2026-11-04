@@ -1,0 +1,20 @@
+dynamic/src/kind_mask.rs
+  h_03360edcd9e88f 1-38
+dynamic/src/lib.rs
+  h_03360edcd9e88f 15
+fighters/common/src/opff/momentum_transfer_line.rs
+  h_03360edcd9e88f 16,22-30,32-33,37
+fighters/common/src/opff/other.rs
+  h_03360edcd9e88f 19,150-155,157-161,163,165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f691820d744d3a60945beab9659e86339fc16942",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
