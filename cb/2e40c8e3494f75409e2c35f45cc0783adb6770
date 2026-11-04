@@ -1,0 +1,18 @@
+src/chara_select/layout.rs
+  h_03360edcd9e88f 131
+src/chara_select/mod.rs
+  h_03360edcd9e88f 226-227,236
+src/chara_select/random.rs
+  h_03360edcd9e88f 62,86-88,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cb2e40c8e3494f75409e2c35f45cc0783adb6770",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
