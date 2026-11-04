@@ -1,0 +1,22 @@
+dynamic/src/frame_info.rs
+  h_03360edcd9e88f 45-49
+fighters/common/src/function_hooks/attack.rs
+  h_03360edcd9e88f 596
+fighters/common/src/function_hooks/collision.rs
+  h_03360edcd9e88f 4-10,31-32
+fighters/common/src/function_hooks/mod.rs
+  h_03360edcd9e88f 759-763,783-784
+utils/src/modules/input.rs
+  h_03360edcd9e88f 563-566
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6bd6c9b76741bb07013a8ca19df9bce97b325dec",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
