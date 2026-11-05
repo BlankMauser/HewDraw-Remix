@@ -1,0 +1,18 @@
+fighters/common/src/opff/tech.rs
+  h_03360edcd9e88f 133-142
+fighters/peach/src/status/attack_air.rs
+  h_03360edcd9e88f 49-54,56-60
+fighters/ryu/src/opff.rs
+  h_03360edcd9e88f 540-544
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "47fbbc8b93d7fb73aad5a2e32e175865057bdeb3",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
