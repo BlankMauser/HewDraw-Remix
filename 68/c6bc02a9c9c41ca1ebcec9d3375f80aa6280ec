@@ -1,0 +1,30 @@
+dynamic/Cargo.toml
+  h_03360edcd9e88f 19-22
+dynamic/src/lib.rs
+  h_03360edcd9e88f 16
+dynamic/src/logic_log.rs
+  h_03360edcd9e88f 1-17
+fighters/common/src/function_hooks/attack.rs
+  h_03360edcd9e88f 393,395,403,410
+fighters/common/src/general_statuses/footstool.rs
+  h_03360edcd9e88f 29
+fighters/common/src/opff/other.rs
+  h_03360edcd9e88f 235,272,291-292,295-296,306,310
+fighters/pfushigisou/src/lib.rs
+  h_03360edcd9e88f 63
+fighters/plizardon/src/lib.rs
+  h_03360edcd9e88f 67
+fighters/pzenigame/src/lib.rs
+  h_03360edcd9e88f 64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "68c6bc02a9c9c41ca1ebcec9d3375f80aa6280ec",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
