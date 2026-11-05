@@ -1,0 +1,14 @@
+hdr-macros/src/lib.rs
+  h_03360edcd9e88f 214-216
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dc068cff1f6445b70d7a31d829beef57a5d81e85",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
