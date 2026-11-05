@@ -1,0 +1,16 @@
+PERF-NOTES.md
+  h_03360edcd9e88f 15-34
+fighters/common/src/function_hooks/mod.rs
+  h_03360edcd9e88f 759-764,784-785
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6dbd28ad379a7243adb352432333218e01825a1e",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
