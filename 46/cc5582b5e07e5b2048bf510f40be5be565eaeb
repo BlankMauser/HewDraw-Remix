@@ -1,0 +1,14 @@
+fighters/common/src/function_hooks/mod.rs
+  h_03360edcd9e88f 778-781,783-784
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "46cc5582b5e07e5b2048bf510f40be5be565eaeb",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
