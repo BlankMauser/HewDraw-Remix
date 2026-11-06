@@ -1,0 +1,14 @@
+utils/src/ui/head_export.rs
+  h_03360edcd9e88f 77-81,90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e7a777c66da980e65b5ae82ab2622254fac35fa8",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
