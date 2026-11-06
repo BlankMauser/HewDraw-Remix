@@ -1,0 +1,16 @@
+fighters/ken/src/opff.rs
+  h_03360edcd9e88f 330-336
+fighters/ryu/src/opff.rs
+  h_03360edcd9e88f 265-271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4a92eb1a3a3090b7e631bf5e021a3d6385262648",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
