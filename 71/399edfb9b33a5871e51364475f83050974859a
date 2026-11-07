@@ -1,0 +1,14 @@
+scripts/build_alpha.py
+  h_03360edcd9e88f 13,81-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "71399edfb9b33a5871e51364475f83050974859a",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
