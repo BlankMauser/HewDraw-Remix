@@ -1,0 +1,18 @@
+docs/controls-mapping.md
+  h_03360edcd9e88f 1-49
+fighters/common/src/function_hooks/controls.rs
+  h_03360edcd9e88f 30-34
+src/lib.rs
+  h_03360edcd9e88f 65-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6a7e8588b8811a3776069806f94aaac5f68b8b82",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
