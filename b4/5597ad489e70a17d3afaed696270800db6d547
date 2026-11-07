@@ -1,0 +1,16 @@
+Cargo.lock
+  h_03360edcd9e88f 1-3215
+docs/building-host-mapping.md
+  h_03360edcd9e88f 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b45597ad489e70a17d3afaed696270800db6d547",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
