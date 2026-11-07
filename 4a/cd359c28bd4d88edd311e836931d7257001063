@@ -1,0 +1,14 @@
+romfs/source/fighter/kirby/motion/body/motion_patch.yaml
+  h_03360edcd9e88f 1596
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4acd359c28bd4d88edd311e836931d7257001063",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
