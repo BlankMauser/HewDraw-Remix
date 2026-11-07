@@ -1,0 +1,14 @@
+utils/src/modules/param.rs
+  h_03360edcd9e88f 901-904,919,936-937,941
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fcceb137b328d20cce997674c225bfc5904d4591",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
