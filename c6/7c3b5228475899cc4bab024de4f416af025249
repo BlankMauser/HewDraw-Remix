@@ -1,0 +1,14 @@
+utils/src/ui.rs
+  h_03360edcd9e88f 519-524,540-541,567-624,665-701
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c67c3b5228475899cc4bab024de4f416af025249",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
