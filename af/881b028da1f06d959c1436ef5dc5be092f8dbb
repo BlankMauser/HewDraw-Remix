@@ -1,0 +1,18 @@
+utils/src/modules/meter.rs
+  h_03360edcd9e88f 377-386
+utils/src/ui.rs
+  h_03360edcd9e88f 25
+utils/src/ui/meter_export.rs
+  h_03360edcd9e88f 1-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "af881b028da1f06d959c1436ef5dc5be092f8dbb",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
