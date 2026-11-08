@@ -1,0 +1,16 @@
+utils/src/ui.rs
+  h_03360edcd9e88f 120-122,227,234,242,249,257,264,275,283,291,298,306,319,327,340,348,355,363,370,378,385,393,408,520,537
+utils/src/ui/meter_export.rs
+  h_03360edcd9e88f 2-13,18,20-42,46,50-53,57-64,71-95,97-133,151,159-161,163,165-167,169-177
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "461bf7d068583e718b443c0954510fda1e1793a7",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
