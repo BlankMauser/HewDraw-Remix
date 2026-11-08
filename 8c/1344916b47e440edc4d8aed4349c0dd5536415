@@ -1,0 +1,42 @@
+dynamic/src/ext.rs
+  h_03360edcd9e88f 1198-1199
+dynamic/src/ground.rs
+  h_03360edcd9e88f 1-48
+dynamic/src/lib.rs
+  h_03360edcd9e88f 6
+fighters/bayonetta/src/acmd/bullets.rs
+  h_03360edcd9e88f 28-29
+fighters/common/src/general_statuses/float/main.rs
+  h_03360edcd9e88f 275
+fighters/common/src/opff/other.rs
+  h_03360edcd9e88f 93
+fighters/gaogaen/src/acmd/smashes.rs
+  h_03360edcd9e88f 77
+fighters/kamui/src/spearhand/acmd.rs
+  h_03360edcd9e88f 33,77
+fighters/krool/src/acmd/smashes.rs
+  h_03360edcd9e88f 105
+fighters/palutena/src/explosiveflame/status.rs
+  h_03360edcd9e88f 59,64
+fighters/peach/src/status/uniq_float_start.rs
+  h_03360edcd9e88f 42
+fighters/reflet/src/status/float.rs
+  h_03360edcd9e88f 182
+fighters/richter/src/axe/opff.rs
+  h_03360edcd9e88f 23
+fighters/ridley/src/status/special_lw.rs
+  h_03360edcd9e88f 93,104
+fighters/zelda/src/status/special_hi.rs
+  h_03360edcd9e88f 221-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c1344916b47e440edc4d8aed4349c0dd5536415",
+  "prompts": {},
+  "humans": {
+    "h_03360edcd9e88f": {
+      "author": "BlankMauser <thomasluvan@gmail.com>"
+    }
+  }
+}
